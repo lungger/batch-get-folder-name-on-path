@@ -1,0 +1,24 @@
+SETLOCAL ENABLEDELAYEDEXPANSION
+set Temp_path=%MAKEDIR%
+for /l %%i in (1,1,2) do call :GetFolder
+goto :next
+
+:GetFolder
+  set /a Flag=1
+:FindSlashLoop
+  call set Auxiliary=%%Temp_path:~-%Flag%%%
+  set AuxChar=%Auxiliary:~0,1%
+  if "%AuxChar%"=="\" (
+    set /a Slash_Pos=Flag
+    set /a Slash_Pre=Flag - 1
+    goto :LoopEnd
+  )
+  set /a Flag+=1
+  goto :FindSlashLoop
+:LoopEnd
+call set folder=%%Temp_path:~-%Slash_Pre%%%
+echo %folder%
+call set Temp_path=%%Temp_path:~0,-%Slash_Pos%%%
+EXIT /B 0
+
+:next
